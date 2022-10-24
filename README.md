@@ -18,6 +18,8 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
 
+## How it works
+
 - Phoenix application on backend with React application on frontend
 - GraphQL API for React app is built with Absinthe and exposes queries, mutations and subscriptions
 - React app uses codegen to get correct Typescript defs and to generate queries based on transaction.graphql
