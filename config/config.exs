@@ -8,7 +8,15 @@
 import Config
 
 config :eth,
-  ecto_repos: [Eth.Repo]
+  ecto_repos: [Eth.Repo],
+  eth_check_api_key: "4ET5GTDAV6FYKH83MF5RG135FGQQ5C5IS9",
+  eth_check_url: "https://api.etherscan.io/api",
+  absinthe_topic: "absinthe-graphql/absinthe"
+
+config :eth, Oban,
+  repo: Eth.Repo,
+  plugins: [Oban.Plugins.Pruner],
+  queues: [events: 10]
 
 # Configures the endpoint
 config :eth, EthWeb.Endpoint,

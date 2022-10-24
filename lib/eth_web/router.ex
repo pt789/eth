@@ -23,7 +23,7 @@ defmodule EthWeb.Router do
   scope "/api" do
     pipe_through(:api)
 
-    forward("/graphiql", Absinthe.Plug.GraphiQL, schema: EthWeb.Schema)
+    forward("/graphiql", Absinthe.Plug.GraphiQL, schema: EthWeb.Schema, socket: EthWeb.UserSocket)
 
     forward("/", Absinthe.Plug, schema: EthWeb.Schema)
   end

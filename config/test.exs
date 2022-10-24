@@ -1,5 +1,8 @@
 import Config
 
+config :eth,
+  eth_check_url: "http://localhost:8080/api"
+
 # Configure your database
 #
 # The MIX_TEST_PARTITION environment variable can be used
@@ -12,6 +15,8 @@ config :eth, Eth.Repo,
   database: "eth_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
+
+config :eth, Oban, testing: :manual
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.

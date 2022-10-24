@@ -3,7 +3,7 @@ defmodule Eth.Transactions do
   The Transactions context.
   """
 
-  import Ecto.Query, warn: false
+  import Ecto.Query, only: [from: 2], warn: false
   alias Eth.Repo
 
   alias Eth.Transactions.Transaction
@@ -53,6 +53,53 @@ defmodule Eth.Transactions do
     %Transaction{}
     |> Transaction.changeset(attrs)
     |> Repo.insert()
+  end
+
+  def check_transaction_completed(%{tx_hash: tx_hash}) do
+    with {:ok, %{data: %{"result" => %{"blockNumber" => transaction_block_hex}}}} <-
+           Eth.Transactions.TransactionApi.get_transaction_by_hash(tx_hash),
+         {:ok, %{data: %{"result" => total_blocks_hex}}} <-
+           Eth.Transactions.TransactionApi.get_number_of_blocks(),
+         total_blocks_integer <- Helpers.hex_to_int(total_blocks_hex) do
+      {:ok,
+       %{
+         data:
+           !is_nil(transaction_block_hex) and
+             total_blocks_integer - Helpers.hex_to_int(transaction_block_hex) > 2
+       }}
+    else
+      {:ok, %{data: %{"error" => %{"code" => -32602}}}} ->
+        {:error, %{type: :unknown_hash}}
+
+      _ ->
+        {:error, %{type: :something_went_wrong}}
+    end
+  end
+
+  def maybe_add_transaction(%{tx_hash: tx_hash}) do
+    if Eth.Repo.exists?(from e in Transaction, where: e.tx_hash == ^tx_hash) do
+      {:error, %{type: :transaction_exists}}
+    else
+      case check_transaction_completed(%{tx_hash: tx_hash}) do
+        {:ok, %{data: true}} ->
+          create_transaction(%{tx_hash: tx_hash, completed: true})
+
+        {:ok, %{data: false}} ->
+          tx = create_transaction(%{tx_hash: tx_hash, completed: false})
+
+          %{tx_hash: tx_hash}
+          |> Eth.Jobs.Worker.new(schedule_in: 15)
+          |> Oban.insert()
+
+          tx
+
+        {:error, %{type: :unknown_hash}} = error ->
+          error
+
+        _ ->
+          {:error, %{type: :something_went_wrong}}
+      end
+    end
   end
 
   @doc """

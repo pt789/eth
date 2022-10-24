@@ -15,9 +15,11 @@ defmodule Eth.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Eth.PubSub},
       # Start the Endpoint (http/https)
-      EthWeb.Endpoint
+      EthWeb.Endpoint,
+      {Absinthe.Subscription, EthWeb.Endpoint},
       # Start a worker by calling: Eth.Worker.start_link(arg)
       # {Eth.Worker, arg}
+      {Oban, Application.fetch_env!(:eth, Oban)}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

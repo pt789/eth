@@ -1,0 +1,36 @@
+fragment Transaction on Transaction {
+  txHash
+  completed
+  insertedAt
+  updatedAt
+}
+
+query Transactions($first: Int, $after: String, $last: Int, $before: String) {
+  transactions(first: $first, after: $after, last: $last, before: $before) {
+    totalCount
+    currentOffset
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      endCursor
+      startCursor
+    }
+    edges {
+      node {
+        ...Transaction
+      }
+    }
+  }
+}
+
+mutation AddTransactions($txHash: String!) {
+  addTransaction(txHash: $txHash) {
+    ...Transaction
+  }
+}
+
+subscription TransactionUpdated {
+  transactionUpdated {
+    ...Transaction
+  }
+}

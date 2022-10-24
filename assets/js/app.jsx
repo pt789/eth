@@ -26,7 +26,7 @@ import { LiveSocket } from "phoenix_live_view";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import topbar from "../vendor/topbar";
-import { Greeter } from "./greeter";
+import { Root } from "./app/root";
 
 let csrfToken = document
   .querySelector("meta[name='csrf-token']")
@@ -50,4 +50,4 @@ liveSocket.connect();
 window.liveSocket = liveSocket;
 
 const root = ReactDOM.createRoot(document.getElementById("app-root"));
-root.render(<Greeter name="Phoenix" />)
+root.render(<Root />);

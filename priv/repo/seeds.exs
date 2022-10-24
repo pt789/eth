@@ -12,17 +12,11 @@
 
 alias Eth.Transactions
 
-Transactions.create_transaction(%{
-  "tx_hash" => "0x7b6d0e8d812873260291c3f8a9fa99a61721a033a01e5c5af3ceb5e1dc9e7bd0",
-  "completed" => false
-})
-
-Transactions.create_transaction(%{
-  "tx_hash" => "0x7b6d0e8d812873260291c3f8a9fa99a61721a033a01e5c5af3ceb5e1dc9e7bd1",
-  "completed" => true
-})
-
-Transactions.create_transaction(%{
-  "tx_hash" => "0x7b6d0e8d812873260291c3f8a9fa99a61721a033a01e5c5af3ceb5e1dc9e7bd2",
-  "completed" => false
-})
+Enum.each(0..10, fn idx ->
+  Transactions.create_transaction(%{
+    "tx_hash" =>
+      "0x7b6d0e8d812873260291c3f8a9fa99a61721a033a01e5c5af3ceb5e1dc9e7bd" <>
+        Integer.to_string(idx),
+    "completed" => true
+  })
+end)
