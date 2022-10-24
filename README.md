@@ -31,3 +31,6 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 - Based on result, transaction is added to DB with correct completed value
 - If completed is not true, Oban job is added so transaction can be checked later
 - After transaction is confirmed with 2 blocks, it is updated in DB and event is broadcaster to React app for live update
+
+## TODO
+- Add frontend test
